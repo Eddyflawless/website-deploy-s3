@@ -28,7 +28,9 @@ jobs:
       run: npm install
       
     - name: Run tests
-      run: echo "running stud unit test...."
+      run: |
+        echo "running stud unit test...."
+        npm run test:unit
     
     - name: Build optimized dist
       run: npm run build
