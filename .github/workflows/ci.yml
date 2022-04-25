@@ -38,7 +38,7 @@ jobs:
     if: github.events.inputs.releaseType == 'prod' || github.events.inputs.releaseType == 'production'
     environment: 
       name: production
-      url: http://${{ secrets.S3_BUCKET }}.s3-website.${{ secrets.REGION }}.amazonaws.com 
+      url: http://sample-website082.s3-website.us-east-2.amazonaws.com 
     needs: [ build ]
     
     runs-on: ubuntu-latest
