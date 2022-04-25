@@ -1,0 +1,58 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Deploy to s3
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Where to release (staging | prod)'
+        required: true
+        default: 'prod'
+  
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+      
+    runs-on: ubuntu-latest
+
+    steps:
+  
+    - uses: actions/checkout@v3
+    
+    - name: Install node_modules
+      run: npm install
+      
+    - name: Run tests
+      run: echo "running stud unit test...."
+    
+    - name: Build optimized dist
+      run: npm run build
+      
+  deploy:
+  
+    if: github.events.inputs.releaseType == 'prod' || github.events.inputs.releaseType == 'production'
+    environment: 
+      name: production
+      url: http://${{ secrets.S3_BUCKET }}.s3-website.${{ secrets.REGION }}.amazonaws.com 
+    needs: [ build ]
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Configure Aws Crendentials  
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.REGION }}
+          
+      - name: Sync copy to s3 bucket
+        run: |
+          aws s3 cp dist/ s3://${{ env.S3_BUCKET }}/ 
+          
+    
