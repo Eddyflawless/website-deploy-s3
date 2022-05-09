@@ -37,7 +37,7 @@ jobs:
       
   deploy:
   
-    if: github.events.inputs.releaseType == 'prod'
+    if: github.event.inputs.releaseType == 'prod'
     environment: 
       name: production
       url: http://sample-website082.s3-website.us-east-2.amazonaws.com 
