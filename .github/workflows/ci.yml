@@ -55,6 +55,7 @@ jobs:
           
       - name: Sync copy to s3 bucket
         run: |
+          ls
           aws s3 cp dist/ s3://${{ secrets.S3_BUCKET }}/ 
           
     
