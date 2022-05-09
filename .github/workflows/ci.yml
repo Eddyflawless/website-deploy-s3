@@ -55,7 +55,7 @@ jobs:
         with:
           name: build-artifact
           path: dist/
-          
+
       - name: Configure Aws Crendentials  
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -65,7 +65,6 @@ jobs:
           
       - name: Sync copy to s3 bucket
         run: |
-          ls
-          aws s3 cp dist/ s3://${{ secrets.S3_BUCKET }}/ 
+          aws s3 cp dist/ s3://${{ secrets.S3_BUCKET }}/ --recursive
           
     
